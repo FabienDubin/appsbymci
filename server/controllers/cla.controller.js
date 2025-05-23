@@ -28,14 +28,12 @@ exports.getConfig = async (req, res) => {
 exports.updateConfig = async (req, res) => {
   try {
     const { code, questions, promptTemplate } = req.body;
-
+    console.log("recieved", req.body);
     //check if we send an array of 5 question
     if (!Array.isArray(questions) || questions.length !== 5) {
-      return res
-        .status(400)
-        .json({
-          error: "Le questionnaire doit contenir exactement 5 questions.",
-        });
+      return res.status(400).json({
+        error: "Le questionnaire doit contenir exactement 5 questions.",
+      });
     }
 
     //Looking for an existing config
@@ -47,6 +45,7 @@ exports.updateConfig = async (req, res) => {
       existingConfig.questions = questions;
       existingConfig.promptTemplate = promptTemplate;
       //saving the config
+
       await existingConfig.save();
       return res.json({
         message: "Config mise à jour avec succès",

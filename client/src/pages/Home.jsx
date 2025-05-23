@@ -11,12 +11,15 @@ const Home = () => {
 
   //NAVIGATION
   const nav = useNavigate();
+
   return (
     <div className="h-screen flex items-center">
       <h1 className="text-9xl font-bold mx-4 my-8 drop-shadow-xl">
         Welcome to the home page
       </h1>
-      {user && <Button>Mercedes CLA</Button>}
+      {user && (
+        <Button onClick={() => nav("/mercedesCLA")}>Mercedes CLA</Button>
+      )}
     </div>
   );
 };

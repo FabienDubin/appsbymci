@@ -5,7 +5,7 @@ const surveySchema = new Schema(
     code: String,
     questions: [
       {
-        questionText: String,
+        text: String,
         options: [{ label: String, value: String }],
       },
     ],

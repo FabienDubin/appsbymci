@@ -18,14 +18,16 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 //MEDIAS
-import { Home, SquareUserRound, Settings2 } from "lucide-react";
-import Monogram from "../Monogram";
+import { Home, SquareUserRound, Settings2, CarFront } from "lucide-react";
+
+import Logo from "../Logo";
 
 //List of Items in the Sidebar
 //Add here all the components available in the dashboard
 const items = [
   { title: "Dashboard", url: "/dashboard", icon: Home },
   { title: "Users", url: "/dashboard/users", icon: SquareUserRound },
+  { title: "Mercedes", url: "/dashboard/mercedes", icon: CarFront },
   { title: "Setting", url: "/dashboard/settings", icon: Settings2 },
 ];
 
@@ -38,7 +40,7 @@ export function AppSidebar() {
       <SidebarHeader>
         <div className="flex flex-row items-center w-full">
           <div className="w-1/5 gap-2">
-            <Monogram />
+            <Logo />
           </div>
 
           <div className="w-3/5 ml-4 flex-col justify-start items-stretch">

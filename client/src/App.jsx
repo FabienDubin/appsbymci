@@ -28,6 +28,7 @@ import ResetPassword from "./pages/ResetPassword";
 
 //APP PAGES
 import MercedesCLA from "./pages/MercedesCLA";
+import MercedesDashboard from "./pages/Dashboard/MercedesDashboard";
 
 function App() {
   //LOCATION
@@ -64,14 +65,16 @@ function App() {
               }
             />
             <Route path="/reset-password/:token" element={<ResetPassword />} />
-            <Route
+            {/* ------- Signup page closed ----------- */}
+            {/* ------- If open, display the signup button in the nav bar----------- */}
+            {/* <Route
               path="/signup"
               element={
                 <IsAnonymous>
                   <Signup />
                 </IsAnonymous>
               }
-            />
+            /> */}
             <Route
               path="/dashboard/*"
               element={
@@ -82,6 +85,10 @@ function App() {
                         {/* Here are all the pages of the admin dashboard */}
                         <Route path="" element={<AdminDashboard />} />
                         <Route path="users" element={<UsersDashboard />} />
+                        <Route
+                          path="mercedes"
+                          element={<MercedesDashboard />}
+                        />
                         <Route
                           path="settings"
                           element={<SettingsDashboard />}

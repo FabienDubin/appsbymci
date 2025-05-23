@@ -153,14 +153,16 @@ const Navbar = () => {
       {/* When the user is not logged in, show the login and sign up buttons. */}
       {!isLoggedIn && (
         <div>
-          <Button
+          {/* SIGNUP PAGE NOT AVAILABLE */}
+
+          {/* <Button
             variant="secondary"
             className="mx-2"
             onClick={() => nav("/signup")}
           >
             <UserRoundPlus />
             SignUp
-          </Button>
+          </Button> */}
           <Button className="mr-4" onClick={() => nav("/login")}>
             <LogIn /> Login
           </Button>
