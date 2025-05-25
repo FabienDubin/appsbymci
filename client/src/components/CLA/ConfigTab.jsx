@@ -36,7 +36,7 @@ const ConfigTab = () => {
   const fetchConfig = async () => {
     try {
       const response = await claService.getConfig();
-      const config = response.data;
+      const config = response;
       console.log("config", config);
       setCode(config.code || "");
       setPromptTemplate(config.promptTemplate || "");
