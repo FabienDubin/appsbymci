@@ -34,7 +34,7 @@ function App() {
   //LOCATION
   const location = useLocation();
   //remove the navbar on the signup the login a,d the dashboard page
-  const noNavbarRoutes = ["/login", "/signup"];
+  const noNavbarRoutes = ["/login", "/signup", "/mercedesCLA"];
   const hideNavbar =
     noNavbarRoutes.includes(location.pathname) ||
     location.pathname.startsWith("/dashboard") ||

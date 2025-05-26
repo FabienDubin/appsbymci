@@ -10,6 +10,10 @@ const {
   updateUser,
 } = require("../controllers/user.controller");
 
+const {
+  upload,
+} = require("../middleware/profileImageUploadToAzure.middleware.js");
+
 // GET /users/all
 // Gets all users depending on a page number and a limit sort by name or email or role or createdAt or updatedAt
 router.get("/all", getAllUsers);
@@ -20,7 +24,7 @@ router.put("/update/:id", updateUser);
 
 // PUT /users/update-image/:userId
 // // Change Profile Picture via Cloudinary
-router.put("/update-image/:userId", updateUserImage);
+router.put("/update-image/:userId", upload.single("imageUrl"), updateUserImage);
 
 // DELETE /users/delete/:id
 // Deletes a user by id

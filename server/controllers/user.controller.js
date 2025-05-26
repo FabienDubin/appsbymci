@@ -66,24 +66,37 @@ exports.updateUser = async (req, res) => {
   }
 };
 
+const {
+  uploadToAzure,
+} = require("../middleware/profileImageUploadToAzure.middleware.js");
+
 // PUT /users/update-image/:userId
-// // Change Profile Picture via Cloudinary (to be updated to Azure Blob for example)
 exports.updateUserImage = async (req, res, next) => {
-  if (!req.file) {
-    console.log("there was an error uploading the file");
-    next(new Error("No file uploaded!"));
-    return;
-  }
   try {
+    if (!req.file) {
+      return res.status(400).json({ error: "Aucun fichier n’a été envoyé." });
+    }
+
+    const imageUrl = await uploadToAzure(req.file);
+
     const updatedUser = await User.findByIdAndUpdate(
       req.params.userId,
-      { image: req.file.path },
-      { new: true }
+      { image: imageUrl },
+      { new: true, runValidators: true }
     );
-    console.log("user image updated", updatedUser);
-    res.status(200).json({ message: "🥳 user image updated", updatedUser });
+
+    if (!updatedUser) {
+      return res.status(404).json({ error: "Utilisateur non trouvé." });
+    }
+
+    console.log("✅ Image de profil mise à jour :", updatedUser);
+    return res.status(200).json({
+      message: "Image de profil mise à jour 🥳",
+      user: updatedUser,
+    });
   } catch (error) {
-    next(error);
+    console.error("❌ Erreur lors de la mise à jour :", error);
+    return next(error);
   }
 };
 

@@ -5,6 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
+import HeaderCla from "@/components/HeaderCla";
+
+//THEME
+import { useTheme } from "@/components/ThemeProvider";
 
 //Messages array to be displayed while generating the avatar
 const messages = [
@@ -24,6 +28,22 @@ const MercedesCLA = () => {
   const [imageUrl, setImageUrl] = useState(null);
   const [loading, setLoading] = useState(false);
   const [randomMessage, setRandomMessage] = useState("");
+
+  //Set the dark theme by default for this page
+  const { theme } = useTheme();
+  useEffect(() => {
+    const root = document.documentElement;
+    const previous = root.classList.contains("light") ? "light" : "dark";
+
+    root.classList.remove("light", "dark");
+    root.classList.add("dark");
+
+    return () => {
+      // Restaurer l’ancien thème à la sortie de la page
+      root.classList.remove("dark");
+      root.classList.add(previous);
+    };
+  }, []);
 
   //PROGRESS BAR OF THE QUIZ
   const progress = (step / 6) * 100; // 0 à 5 = étapes, 6 = loading, 7 = image
@@ -91,108 +111,112 @@ const MercedesCLA = () => {
   };
 
   return (
-    <div className="max-w-xl mx-auto px-4 py-8 space-y-6">
-      <Progress value={progress} />
+    <div className="bg-black min-h-screen">
+      <HeaderCla />
 
-      {step === 0 && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Qui êtes-vous ?</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <Input
-              placeholder="Prénom"
-              value={user.name}
-              onChange={(e) => setUser({ ...user, name: e.target.value })}
-            />
-            <div className="flex gap-4">
-              {["Homme", "Femme", "Autre"].map((g) => (
+      <div className="max-w-xl mx-auto px-4 pb-8 space-y-6">
+        <Progress value={progress} />
+
+        {step === 0 && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Qui êtes-vous ?</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <Input
+                placeholder="Prénom"
+                value={user.name}
+                onChange={(e) => setUser({ ...user, name: e.target.value })}
+              />
+              <div className="flex gap-4">
+                {["Homme", "Femme", "Autre"].map((g) => (
+                  <Button
+                    key={g}
+                    variant={user.gender === g ? "default" : "outline"}
+                    onClick={() => setUser({ ...user, gender: g })}
+                  >
+                    {g}
+                  </Button>
+                ))}
+              </div>
+              <Input
+                placeholder="Code d’accès"
+                value={user.code}
+                onChange={(e) => setUser({ ...user, code: e.target.value })}
+              />
+              <Button
+                className="w-full mt-4"
+                onClick={() => setStep(1)}
+                disabled={!user.name || !user.code}
+              >
+                Commencer
+              </Button>
+            </CardContent>
+          </Card>
+        )}
+
+        {step > 0 && step <= 5 && questions[step - 1] && (
+          <Card>
+            <CardHeader>
+              <CardTitle>{questions[step - 1].text}</CardTitle>
+            </CardHeader>
+            <CardContent className="grid grid-cols-1 gap-3">
+              {questions[step - 1].options.map((opt) => (
                 <Button
-                  key={g}
-                  variant={user.gender === g ? "default" : "outline"}
-                  onClick={() => setUser({ ...user, gender: g })}
+                  key={opt.value}
+                  onClick={() => handleAnswer(opt.value)}
+                  className="w-full"
                 >
-                  {g}
+                  {opt.label}
                 </Button>
               ))}
-            </div>
-            <Input
-              placeholder="Code d’accès"
-              value={user.code}
-              onChange={(e) => setUser({ ...user, code: e.target.value })}
-            />
-            <Button
-              className="w-full mt-4"
-              onClick={() => setStep(1)}
-              disabled={!user.name || !user.code}
-            >
-              Commencer
-            </Button>
-          </CardContent>
-        </Card>
-      )}
 
-      {step > 0 && step <= 5 && questions[step - 1] && (
-        <Card>
-          <CardHeader>
-            <CardTitle>{questions[step - 1].text}</CardTitle>
-          </CardHeader>
-          <CardContent className="grid grid-cols-1 gap-3">
-            {questions[step - 1].options.map((opt) => (
-              <Button
-                key={opt.value}
-                onClick={() => handleAnswer(opt.value)}
-                className="w-full"
-              >
-                {opt.label}
+              <Button variant="ghost" onClick={handleBack}>
+                ← Revenir
               </Button>
-            ))}
 
-            <Button variant="ghost" onClick={handleBack}>
-              ← Revenir
-            </Button>
+              {/* Si c’est la dernière question, affiche le bouton générer */}
+              {step === 5 && answers[4] && (
+                <Button className="mt-4 w-full" onClick={handleGenerate}>
+                  Générer mon avatar
+                </Button>
+              )}
+            </CardContent>
+          </Card>
+        )}
 
-            {/* Si c’est la dernière question, affiche le bouton générer */}
-            {step === 5 && answers[4] && (
-              <Button className="mt-4 w-full" onClick={handleGenerate}>
-                Générer mon avatar
-              </Button>
-            )}
-          </CardContent>
-        </Card>
-      )}
-
-      {step === 6 && (
-        <div className="text-center space-y-6 py-12">
-          <Loader2 className="mx-auto animate-spin h-10 w-10 text-gray-600" />
-          <p className="text-lg">{randomMessage}</p>
-          <p className="text-muted-foreground">Génération en cours...</p>
-        </div>
-      )}
-
-      {step === 7 && imageUrl && (
-        <div className="text-center space-y-4">
-          <img
-            src={imageUrl}
-            alt="Avatar généré"
-            className="rounded-xl shadow-md max-w-full"
-          />
-          <div className="flex gap-4 justify-center mt-4">
-            <Button
-              className="w-full"
-              onClick={() => {
-                window.open(imageUrl, "_blank", "noopener,noreferrer");
-              }}
-            >
-              Télécharger
-            </Button>
-
-            <Button variant="secondary" className="w-full" onClick={restart}>
-              Recommencer
-            </Button>
+        {step === 6 && (
+          <div className="text-center space-y-6 py-12">
+            <Loader2 className="mx-auto animate-spin h-10 w-10 text-gray-600" />
+            <p className="text-lg">{randomMessage}</p>
+            <p className="text-muted-foreground">Génération en cours...</p>
           </div>
-        </div>
-      )}
+        )}
+
+        {step === 7 && imageUrl && (
+          <div className="text-center space-y-4">
+            <img
+              src={imageUrl}
+              alt="Avatar généré"
+              className="rounded-xl shadow-md max-w-full"
+            />
+            <div className="flex gap-4 justify-center mt-4">
+              <Button
+                className="w-full"
+                onClick={() => {
+                  window.open(imageUrl, "_blank", "noopener,noreferrer");
+                }}
+              >
+                Télécharger
+              </Button>
+
+              <Button variant="secondary" className="w-full" onClick={restart}>
+                Recommencer
+              </Button>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

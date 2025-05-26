@@ -1,6 +1,8 @@
 const CLAConfig = require("../models/CLAConfig.model");
 const CLAResponse = require("../models/CLAResponse.model");
-
+const {
+  uploadImageToAzureFromUrl,
+} = require("../middleware/avatarToAzure.middleware");
 const axios = require("axios");
 
 //This function renders the prompt from the template defined in the config and the answers of the user
@@ -133,6 +135,7 @@ exports.submitAnswer = async (req, res) => {
 
     //Getting the image as a response from openai
     const imageUrl = openaiRes.data.data[0].url;
+    const storedAvatarUrl = await uploadImageToAzureFromUrl(imageUrl);
 
     //Sending the response to the db
     const newResponse = new CLAResponse({
@@ -141,7 +144,7 @@ exports.submitAnswer = async (req, res) => {
       code,
       answers,
       prompt,
-      imageUrl,
+      imageUrl: storedAvatarUrl,
       createdAt: new Date(),
     });
 
