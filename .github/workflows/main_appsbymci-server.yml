@@ -24,8 +24,7 @@ jobs:
           node-version: "22.x"
 
       - name: install dependencies (server only)
-        working-directory: ./server
-        run: npm install #App just need to intall then start
+        run: cd server && npm install #App just need to intall then start
 
       - name: Zip server for deployment
         run: |
