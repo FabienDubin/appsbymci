@@ -25,7 +25,7 @@ jobs:
 
       - name: install dependencies (server only)
         working-directory: ./server
-        run: npm install
+        run: npm install #App just need to intall then start
 
       - name: Zip server for deployment
         run: |
