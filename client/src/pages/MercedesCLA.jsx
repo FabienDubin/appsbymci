@@ -29,22 +29,11 @@ const MercedesCLA = () => {
   const [loading, setLoading] = useState(false);
   const [randomMessage, setRandomMessage] = useState("");
 
-  //Set the dark theme by default for this page
-  const { theme } = useTheme();
+  // //Set the dark theme by default for this page
+  const { setTheme } = useTheme();
   useEffect(() => {
-    const root = document.documentElement;
-    const previous = root.classList.contains("light") ? "light" : "dark";
-
-    root.classList.remove("light", "dark");
-    root.classList.add("dark");
-
-    return () => {
-      // Restaurer l’ancien thème à la sortie de la page
-      root.classList.remove("dark");
-      root.classList.add(previous);
-    };
+    setTheme("dark");
   }, []);
-
   //PROGRESS BAR OF THE QUIZ
   const progress = (step / 6) * 100; // 0 à 5 = étapes, 6 = loading, 7 = image
 
@@ -114,8 +103,8 @@ const MercedesCLA = () => {
     <div className="bg-black min-h-screen">
       <HeaderCla />
 
-      <div className="max-w-xl mx-auto px-4 pb-8 space-y-6">
-        <Progress value={progress} />
+      <div className="relative z-10 max-w-xl mx-auto px-4 mt-2 sm:mt-[-100px] md:mt-[-150px] lg:mt-[-200px] xl:mt-[-250px] 2xl:mt-[-300px] pb-8 space-y-6 shadow-xl">
+        {step < 6 && <Progress value={progress} />}
 
         {step === 0 && (
           <Card>
@@ -187,7 +176,7 @@ const MercedesCLA = () => {
 
         {step === 6 && (
           <div className="text-center space-y-6 py-12">
-            <Loader2 className="mx-auto animate-spin h-10 w-10 text-gray-600" />
+            <Loader2 className="mx-auto animate-spin h-20 w-20 text-gray-600" />
             <p className="text-lg">{randomMessage}</p>
             <p className="text-muted-foreground">Génération en cours...</p>
           </div>
